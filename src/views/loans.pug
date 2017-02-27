@@ -1,0 +1,57 @@
+extends layout
+
+block content
+  h1= pageTitle
+  p
+    a.button(href='/loans/new')= 'Create New Loan'
+
+  p= 'Filters '
+    a(href='/loans')= 'All'
+    |  | 
+    a(href='/loans/overdue')= 'Overdue'
+    |  | 
+    a(href='/loans/checked')= 'Checked Out'
+
+  table
+    thead
+      tr
+        th= 'Book'
+        th= 'Patron'
+        th= 'Loaned on'
+        th= 'Return by'
+        th= 'Action'
+
+    tbody
+      tr
+        td
+          a(href='')= 'Emma'
+        td
+          a(href='')= 'Dave McFarland'
+        td= '2015-12-10'
+        td= '2015-12-10'
+        td
+        td
+          a.button(href='')= 'Return book'
+        
+      tr
+        td
+          a(href='')= 'Emma'
+        td
+          a(href='')= 'Dave McFarland'
+        td= '2015-12-10'
+        td= '2015-12-10'
+        td
+        td
+          a.button(href='')= 'Return book'
+          
+      tr
+        td
+          a(href='')= 'Emma'
+        td
+          a(href='')= 'Dave McFarland'
+        td= '2015-12-10'
+        td= '2015-12-10'
+        td
+        td
+          a.button(href='')= 'Return book'
+        

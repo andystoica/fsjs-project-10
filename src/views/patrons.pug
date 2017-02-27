@@ -1,0 +1,33 @@
+extends layout
+
+block content
+  h1= pageTitle
+  p
+    a.button(href='/patrons/new')= 'Create New Patron'
+
+  table
+    thead
+      tr
+        th= 'Name'
+        th= 'Address'
+        th= 'Email'
+        th= 'Library ID'
+        th= 'Zip'
+
+    tbody
+      tr
+        td
+          a(href='')= 'Andrew Chalkley'
+        td= '1234 NE 20st St'
+        td= 'andrew.chalkley@teamtreehouse.com'
+        td= 'MCL1001'
+        td= '90210'
+
+      tr
+        td
+          a(href='')= 'Andrew Chalkley'
+        td= '1234 NE 20st St'
+        td= 'andrew.chalkley@teamtreehouse.com'
+        td= 'MCL1001'
+        td= '90210'
+

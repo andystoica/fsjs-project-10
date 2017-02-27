@@ -5,7 +5,9 @@ var logger = require('morgan');
 var bodyParser = require('body-parser');
 
 var index = require('./routes/index');
-var users = require('./routes/users');
+var books = require('./routes/books');
+var patrons = require('./routes/patrons');
+var loans = require('./routes/loans');
 
 var app = express();
 
@@ -20,11 +22,13 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', index);
-app.use('/users', users);
+app.use('/books', books);
+app.use('/patrons', patrons);
+app.use('/loans', loans);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
-  var err = new Error('Not Found');
+  var err = new Error('Oh dear, this page is missing...');
   err.status = 404;
   next(err);
 });
