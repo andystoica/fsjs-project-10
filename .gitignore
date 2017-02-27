@@ -1,6 +1,5 @@
 node_modules
 mock
-
 *.log
 
 .DS_Store
