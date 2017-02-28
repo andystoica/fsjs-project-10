@@ -12,9 +12,12 @@ module.exports = function(sequelize, DataTypes) {
     library_id: DataTypes.STRING,
     zip_code: DataTypes.INTEGER
   }, {
+    getterMethods: {
+      name: function () { return this.first_name + ' ' + this.last_name }
+    },
     classMethods: {
       associate: function(models) {
-        // associations can be defined here
+        this.hasMany(models.Loan, { foreignKey: 'patron_id' });
       }
     },
     timestamps: false

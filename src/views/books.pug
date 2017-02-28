@@ -3,14 +3,14 @@ extends layout
 block content
   h1= pageTitle
   p
-    a.button(href='/books/new')= 'Create New Book'
+    a.button(href= '/books/new')= 'Create New Book'
 
   p= 'Filters '
-    a(href='/books')= 'All'
+    a(href= '/books')= 'All'
     |  | 
-    a(href='/books/overdue')= 'Overdue'
+    a(href= '/books/overdue')= 'Overdue'
     |  | 
-    a(href='/books/checked')= 'Checked Out'
+    a(href= '/books/checked')= 'Checked Out'
 
   table
     thead
@@ -21,21 +21,10 @@ block content
         th= 'Year Released'
 
     tbody
-      tr
-        td
-          a(href='')= 'Harry Potter and the Chamber of Secrets'
-        td= 'J.K. Rowling'
-        td= 'Fantasy'
-        td= '1998'
-      tr
-        td
-          a(href='')= 'Harry Potter and the Chamber of Secrets'
-        td= 'J.K. Rowling'
-        td= 'Fantasy'
-        td= '1998'
-      tr
-        td
-          a(href='')= 'Harry Potter and the Chamber of Secrets'
-        td= 'J.K. Rowling'
-        td= 'Fantasy'
-        td= '1998'
+      each book in books
+        tr
+          td
+            a(href= '/book/edit/' + book.id)= book.title
+          td= book.author
+          td= book.genre
+          td= book.first_published

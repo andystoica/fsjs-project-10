@@ -1,10 +1,24 @@
 var express = require('express');
 var router = express.Router();
+var Patron = require('../models').Patron;
 
-// GET all patrons
+/**
+ * GET all patrons
+ * /patrons
+ * 
+ * Reads all patrons details from the patrons table
+ */
 router.get('/', function(req, res, next) {
-  res.render('patrons', {patrons: [], pageTitle: 'Patrons'});
+  
+  Patron.findAll()
+        .then(function (patrons) {
+          res.render('patrons', {patrons: patrons, pageTitle: 'Patrons'});
+        });
 });
+
+
+
+/////////////// PLACEHOLDERS ///////////////
 
 // GET Add new patron
 router.get('/new', function(req, res, next) {
