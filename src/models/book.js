@@ -9,7 +9,7 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.STRING,
       validate: {
         notEmpty: {
-          msg: 'Book title is required.'
+          msg: 'Title is required.'
         }
       }
     },
@@ -17,7 +17,7 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.STRING,
       validate: {
         notEmpty: {
-          msg: 'Book author is required.'
+          msg: 'Author is required.'
         }
       }
     },
@@ -25,7 +25,7 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.STRING,
       validate: {
         notEmpty: {
-          msg: 'Book genre is required.'
+          msg: 'Genre is required.'
         }
       }
     },

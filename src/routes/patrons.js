@@ -65,18 +65,39 @@ router.get('/details/:id', (req, res, next) => {
  * Loads the new patrons form
  */
 router.get('/new', (req, res, next) => {
-  res.render('patron_new', {pageTitle: 'New Patron'});
+  let patron = Patron.build();
+  renderNewPatron(res, patron);
 });
 
-
-
-/////////////// PLACEHOLDERS ///////////////
-
-// PUT Save new patron
-router.post('/save', (req, res, next) => {
-  res.send('Save new patron.');
+/**
+ * POST Save new patron
+ * /patrons/new
+ */ 
+router.post('/new', (req, res, next) => {
+  Patron.create(req.body)
+      .then((patron) => {
+        res.redirect('/patrons');
+      })
+      .catch((err) => {
+        if (err.name === 'SequelizeValidationError') {
+          let patron = Patron.build(req.body);
+          renderNewPatron(res, patron, err);
+        }
+        else res.send(500);
+      });
 });
 
+/**
+ * Helper for rendering the New Patron page
+ */
+function renderNewPatron(res, patron, err) {
+  res.render('patron_new', {
+      patron: patron,
+      errors: err ? err.errors : [],
+      pageTitle: 'New Patron'
+    }
+  )
+}
 
 
 module.exports = router;

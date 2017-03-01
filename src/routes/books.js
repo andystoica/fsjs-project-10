@@ -85,27 +85,60 @@ router.get('/checked', (req, res, next) => {
  */
 router.get('/details/:id', (req, res, next) => {
 
-  let bookQuery = {
-    where: {
-      id: req.params.id // single book by id
-    }
-  }
+  Book.findById(req.params.id)
+      .then((book) => {
+        renderUpdateBookDetails(res, book);
+      });
+});
+
+/**
+ * POST save book details
+ * /books/details/:id
+ * 
+ * Saves the selected book details and
+ * handles any validation errros
+ */
+router.post('/details/:id', (req, res, next) => {
+
+  Book.findById(req.params.id)
+      .then((book) => { // update book record
+        return book.update(req.body)
+      })
+      .then((book) => { // redirect to book listing page
+        res.redirect('/books')
+      })
+      .catch((err) => { // handle validation errors
+        if (err.name === 'SequelizeValidationError') {
+          let book = Book.build(req.body);
+          renderUpdateBookDetails(res, book, err);
+        }
+        else res.send(500);
+      });
+});
+
+/**
+ * Helper for rendering the Book Details page
+ * by fetching loan history for that particular book
+ */
+function renderUpdateBookDetails(res, book, err) {
 
   let loanQuery = {
     include: [Book, Patron],
     where: {
-      book_id: req.params.id // all loans for book id
+      book_id: book.id // all loans for book id
     }
   }
 
-  Book.findOne(bookQuery)
-      .then((book) => {
-        Loan.findAll(loanQuery)
-            .then((loans) => {
-              res.render('book_details', {book: book, loans: loans});
-            });
+  Loan.findAll(loanQuery)
+      .then((loans) => {
+        res.render('book_details', {
+            book: book,
+            loans: loans,
+            errors: err ? err.errors : [],
+          }
+        );
       });
-});
+}
 
 
 
@@ -116,17 +149,39 @@ router.get('/details/:id', (req, res, next) => {
  * Loads the new book form
  */
 router.get('/new', function(req, res, next) {
-  res.render('book_new', {pageTitle: 'New Book'});
+  let book = Book.build();
+  renderNewBook(res, book);
 });
 
-
-
-/////////////// PLACEHOLDERS ///////////////
-
-// PUT Save new book
-router.post('/save', function(req, res, next) {
-  res.send('Save new book.');
+/**
+ * POST Save new book
+ * /books/new
+ */
+router.post('/new', function(req, res, next) {
+  Book.create(req.body)
+      .then((book) => {
+        res.redirect('/books');
+      })
+      .catch((err) => {
+        if (err.name === 'SequelizeValidationError') {
+          let book = Book.build(req.body);
+          renderNewBook(res, book, err);
+        }
+        else res.send(500);
+      });
 });
+
+/**
+ * Helper for rendering the New Book page
+ */
+function renderNewBook(res, book, err) {
+  res.render('book_new', {
+      book: book,
+      errors: err ? err.errors : [],
+      pageTitle: 'New Book'
+    }
+  );
+}
 
 
 
