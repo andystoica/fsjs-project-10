@@ -3,7 +3,7 @@ extends layout
 block content
   h1= pageTitle
 
-  form
+  form(method='POST' action= '/loans/save')
     p
       label(for= 'book_id')= 'Book'
       select

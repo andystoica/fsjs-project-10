@@ -3,7 +3,7 @@ extends layout
 block content
   h1= pageTitle
 
-  form
+  form(method='POST' action= '/books/save')
     p
       label(for= 'title')= 'Title'
       input(id= 'title' type= 'text')

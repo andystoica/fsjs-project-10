@@ -3,7 +3,7 @@ extends layout
 block content
   h1= pageTitle
 
-  form
+  form(method='POST' action= '/patrons/save')
     p
       label(for= 'first_name')= 'First Name'
       input(id= 'first_name' type= 'text')

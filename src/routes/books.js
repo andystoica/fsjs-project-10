@@ -109,15 +109,22 @@ router.get('/details/:id', (req, res, next) => {
 
 
 
-/////////////// PLACEHOLDERS ///////////////
-
-// GET Add new book
+/**
+ * GET Add new book
+ * /books/new
+ * 
+ * Loads the new book form
+ */
 router.get('/new', function(req, res, next) {
   res.render('book_new', {pageTitle: 'New Book'});
 });
 
+
+
+/////////////// PLACEHOLDERS ///////////////
+
 // PUT Save new book
-router.put('/new', function(req, res, next) {
+router.post('/save', function(req, res, next) {
   res.send('Save new book.');
 });
 

@@ -125,7 +125,7 @@ router.get('/new', (req, res, next) => {
 /////////////// PLACEHOLDERS ///////////////
 
 // PUT Save new loan
-router.put('/new', (req, res, next) => {
+router.post('/save', (req, res, next) => {
   res.send('Save new loan.');
 });
 

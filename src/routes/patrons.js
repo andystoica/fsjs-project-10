@@ -58,15 +58,22 @@ router.get('/details/:id', (req, res, next) => {
 
 
 
-/////////////// PLACEHOLDERS ///////////////
-
-// GET Add new patron
+/**
+ * GET Add new patron
+ * /patrons/new
+ * 
+ * Loads the new patrons form
+ */
 router.get('/new', (req, res, next) => {
   res.render('patron_new', {pageTitle: 'New Patron'});
 });
 
+
+
+/////////////// PLACEHOLDERS ///////////////
+
 // PUT Save new patron
-router.put('/new', (req, res, next) => {
+router.post('/save', (req, res, next) => {
   res.send('Save new patron.');
 });
 
