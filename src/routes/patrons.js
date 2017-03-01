@@ -1,4 +1,16 @@
 'use strict';
+
+/**
+ * /patrons             - GET  | lists all patrons
+ * /patrons/details/:id - GET  | details of individual patron with loan history
+ * /patrons/details/:id - POST | updates patron details and handles validation
+ * /patrons/new         - GET  | empty form for adding a new patron
+ * /patrons/new         - POST | creates a new patron record and handles validation
+ * 
+ * renderNewPatron(res, patron, err) - Helper for rendering new patron form
+ * renderUpdatePatronDetails(res, patron, err) - Helper for rendering patron details form
+ */
+
 var express = require('express');
 var router  = express.Router();
 
@@ -34,25 +46,36 @@ router.get('/', (req, res, next) => {
  */
 router.get('/details/:id', (req, res, next) => {
 
-  let patronQuery = {
-    where: {
-      id: req.params.id // single patron by id
-    }
-  }
+  Patron.findById(req.params.id)
+      .then((patron) => {
+        renderUpdatePatronDetails(res, patron);
+      });
+});
 
-  let loanQuery = {
-    include: [Book, Patron],
-    where: {
-      patron_id: req.params.id // all loans for patron id
-    }
-  }
 
-  Patron.findOne(patronQuery)
-        .then((patron) => {
-          Loan.findAll(loanQuery)
-              .then((loans) => {
-                res.render('patron_details', {patron: patron, loans: loans});
-              });
+
+/**
+ * POST save patron details
+ * /patron/details/:id
+ * 
+ * Saves the selected patron details and
+ * handles any validation errros
+ */
+router.post('/details/:id', (req, res, next) => {
+
+  Patron.findById(req.params.id)
+        .then((patron) => { // update patron record
+          return patron.update(req.body)
+        })
+        .then((patron) => { // redirect to book listing page
+          res.redirect('/patrons')
+        })
+        .catch((err) => { // handle validation errors
+          if (err.name === 'SequelizeValidationError') {
+            let patron = Patron.build(req.body);
+            renderUpdatePatronDetails(res, patron, err);
+          }
+          else res.send(500);
         });
 });
 
@@ -68,6 +91,8 @@ router.get('/new', (req, res, next) => {
   let patron = Patron.build();
   renderNewPatron(res, patron);
 });
+
+
 
 /**
  * POST Save new patron
@@ -87,6 +112,8 @@ router.post('/new', (req, res, next) => {
       });
 });
 
+
+
 /**
  * Helper for rendering the New Patron page
  */
@@ -98,6 +125,33 @@ function renderNewPatron(res, patron, err) {
     }
   )
 }
+
+
+
+/**
+ * Helper for rendering the Patron Detail page
+ * by fetching loan history for that particular patron
+ */
+function renderUpdatePatronDetails(res, patron, err) {
+  
+  let loanQuery = {
+    include: [Book, Patron],
+    where: {
+      patron_id: patron.id // all loans for patron id
+    }
+  }
+
+  Loan.findAll(loanQuery)
+      .then((loans) => {
+        res.render('patron_details', {
+            patron: patron,
+            loans: loans,
+            errors: err ? err.errors : [],
+          }
+        );
+      });
+}
+
 
 
 module.exports = router;
