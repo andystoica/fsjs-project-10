@@ -18,7 +18,7 @@ block content
       each patron in patrons
         tr
           td
-            a(href='/patrons/edit/' + patron.id)= patron.name
+            a(href='/patrons/details/' + patron.id)= patron.name
           td= patron.address
           td= patron.email
           td= patron.library_id

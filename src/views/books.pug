@@ -24,7 +24,7 @@ block content
       each book in books
         tr
           td
-            a(href= '/book/edit/' + book.id)= book.title
+            a(href= '/books/details/' + book.id)= book.title
           td= book.author
           td= book.genre
           td= book.first_published

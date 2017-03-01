@@ -18,7 +18,7 @@ router.get('/', function(req, res, next) {
   let loanQuery = {
     include: [Book, Patron]
   }
-  
+
   Loan.findAll(loanQuery)
       .then(function (loans) {
         res.render('loans', {loans: loans, pageTitle: 'Loans'});
@@ -79,11 +79,17 @@ router.get('/checked', function(req, res, next) {
 
 /////////////// PLACEHOLDERS ///////////////
 
+// GET loan details
+router.get('/details/:id', function(req, res, next) {
+  res.send('Loan details.');
+});
 
 // GET Add new loan
 router.get('/new', function(req, res, next) {
-  res.send('Add new loan.');
+  res.render('loan_new', {books: [], patrons: [], pageTitle: 'New Loan'});
 });
+
+
 
 // PUT Save new loan
 router.put('/new', function(req, res, next) {

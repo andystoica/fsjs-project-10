@@ -73,13 +73,20 @@ router.get('/checked', function(req, res, next) {
 
 
 
+
 /////////////// PLACEHOLDERS ///////////////
 
+// GET book details
+router.get('/details/:id', function(req, res, next) {
+  res.render('book_details', {book: {}, loans: [], pageTitle: 'Book details'});
+});
 
 // GET Add new book
 router.get('/new', function(req, res, next) {
-  res.send('Add new book.');
+  res.render('book_new', {pageTitle: 'New Book'});
 });
+
+
 
 // PUT Save new book
 router.put('/new', function(req, res, next) {
