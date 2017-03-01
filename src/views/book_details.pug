@@ -6,16 +6,16 @@ block content
   form
     p
       label(for= 'title')= 'Title'
-      input(id= 'title' type= 'text' value= '')
+      input(id= 'title' type= 'text' value= book.title)
     p
       label(for= 'author')= 'Author'
-      input(id= 'author' type= 'text' value= '')
+      input(id= 'author' type= 'text' value= book.author)
     p
       label(for= 'genre')= 'Genre'
-      input(id= 'genre' type= 'text' value= '')
+      input(id= 'genre' type= 'text' value= book.genre)
     p
       label(for= 'first_published')= 'First Published'
-      input(id= 'first_published' type= 'text' value= '')
+      input(id= 'first_published' type= 'text' value= book.first_published)
     p
       input(type= 'submit' value= 'Update')
 
@@ -30,13 +30,14 @@ block content
         th= 'Returned on'
         th= 'Action'
     tbody
-      tr
-        td
-          a(href= '')= 'A Brief History of Time'
-        td
-          a(href= '')= 'Andrew Chalkley'
-        td= '2015-12-12'
-        td= '2015-12-12'
-        td= ''
-        td
-          a(href= '' class= 'button')= 'Return Book'
+      each loan in loans
+        tr
+          td
+            a(href= '/books/details/' + loan.Book.id)= loan.Book.title
+          td
+            a(href= '/patrons/details/' + loan.Patron.id)= loan.Patron.name
+          td= loan.loaned_on
+          td= loan.return_by
+          td= loan.returned_on
+          td
+            a(href= '' class= 'button')= 'Return Book'

@@ -6,22 +6,22 @@ block content
   form
     p
       label(for= 'first_name')= 'First Name'
-      input(id= 'first_name' type= 'text' value= 'Andrew')
+      input(id= 'first_name' type= 'text' value= patron.first_name)
     p
       label(for= 'last_name')= 'Last Name'
-      input(id= 'last_name' type= 'text' value= 'Chalkley')
+      input(id= 'last_name' type= 'text' value= patron.last_name)
     p
       label(for= 'address')= 'Address'
-      input(id= 'address' type= 'text' value= '1234 NE 20 Street')
+      input(id= 'address' type= 'text' value= patron.address)
     p
       label(for= 'email')= 'Email'
-      input(id= 'email' type= 'text' value= 'andrew.chalkley@teamtreehouse.com')
+      input(id= 'email' type= 'text' value= patron.email)
     p
       label(for= 'library_id')= 'Library ID'
-      input(id= 'library_id' type= 'text' value= 'MCL1001')
+      input(id= 'library_id' type= 'text' value= patron.library_id)
     p
       label(for= 'zip_code')= 'Zip Code'
-      input(id= 'zip_code' type= 'text' value= '90210')
+      input(id= 'zip_code' type= 'text' value= patron.zip_code)
     p
       input(type= 'submit' value= 'Update')
 
@@ -36,13 +36,14 @@ block content
         th= 'Returned on'
         th= 'Action'
     tbody
-      tr
-        td
-          a(href= '')= 'A Brief History of Time'
-        td
-          a(href= '')= 'Andrew Chalkley'
-        td= '2015-12-12'
-        td= '2015-12-12'
-        td= ''
-        td
-          a(href= '' class= 'button')= 'Return Book'
+      each loan in loans
+        tr
+          td
+            a(href= '/books/details/' + loan.Book.id)= loan.Book.title
+          td
+            a(href= '/patrons/details/' + loan.Patron.id)= loan.Patron.name
+          td= loan.loaned_on
+          td= loan.return_by
+          td= loan.returned_on
+          td
+            a(href= '' class= 'button')= 'Return Book'

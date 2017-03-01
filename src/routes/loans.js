@@ -59,7 +59,7 @@ router.get('/overdue', function(req, res, next) {
  * Read all checked loan details in the loans table
  * and associated book and patron details
  */
-router.get('/checked', function(req, res, next) {
+router.get('/checked', (req, res, next) => {
   
   let loanQuery = {
     include: [Book, Patron],
@@ -69,30 +69,44 @@ router.get('/checked', function(req, res, next) {
   }
 
   Loan.findAll(loanQuery)
-      .then(function (loans) {
+      .then((loans) => {
         res.render('loans', {loans: loans, pageTitle: 'Checked out loans'});
       });
 });
 
 
+/**
+ * GET loan details
+ * /loans/return/:id
+ * 
+ * Retreives loan details for specified ID
+ */
+router.get('/return/:id', (req, res, next) => {
+
+  let loanQuery = {
+    include: [Book, Patron],
+    where: {
+      id: req.params.id // only one loan by id
+    }
+  }
+
+  Loan.findOne(loanQuery)
+      .then((loan) => {
+        res.render('loan_return', {loan: loan, pageTitle: 'Return Book'});
+      });
+});
 
 
 /////////////// PLACEHOLDERS ///////////////
 
-// GET loan details
-router.get('/details/:id', function(req, res, next) {
-  res.send('Loan details.');
-});
 
 // GET Add new loan
-router.get('/new', function(req, res, next) {
+router.get('/new', (req, res, next) => {
   res.render('loan_new', {books: [], patrons: [], pageTitle: 'New Loan'});
 });
 
-
-
 // PUT Save new loan
-router.put('/new', function(req, res, next) {
+router.put('/new', (req, res, next) => {
   res.send('Save new loan.');
 });
 

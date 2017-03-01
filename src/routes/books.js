@@ -1,8 +1,11 @@
+'use strict';
 var express = require('express');
-var router = express.Router();
-var Book = require('../models').Book;
-var Patron = require('../models').Patron;
-var Loan = require('../models').Loan;
+var router  = express.Router();
+
+// Databse Models
+var Book    = require('../models').Book;
+var Patron  = require('../models').Patron;
+var Loan    = require('../models').Loan;
 
 
 
@@ -12,10 +15,10 @@ var Loan = require('../models').Loan;
  * 
  * Reads all books details in the books table
  */
-router.get('/', function(req, res, next) {
+router.get('/', (req, res, next) => {
 
   Book.findAll()
-      .then(function (books) {
+      .then((books) => {
         res.render('books', {books: books, pageTitle: 'Books'});
       });
 });
@@ -29,7 +32,7 @@ router.get('/', function(req, res, next) {
  * Reads all overbook loans from the loans table
  * then updates the table with the corresponding book details
  */
-router.get('/overdue', function(req, res, next) {
+router.get('/overdue', (req, res, next) => {
   
   let loanQuery = {
     include: [Book, Patron],
@@ -40,8 +43,8 @@ router.get('/overdue', function(req, res, next) {
   }
 
   Loan.findAll(loanQuery)
-      .then(function (loans) {
-        books= loans.map((loan) => loan.Book);
+      .then((loans) => {
+        let books = loans.map((loan) => loan.Book);
         res.render('books', {books: books, pageTitle: 'Overdue books'});
       });
 });
@@ -55,7 +58,7 @@ router.get('/overdue', function(req, res, next) {
  * Reads all checkout loans from the loans table
  * then updates the table with the corresponding book details
  */
-router.get('/checked', function(req, res, next) {
+router.get('/checked', (req, res, next) => {
 
   let loanQuery = {
     include: [Book, Patron],
@@ -65,28 +68,54 @@ router.get('/checked', function(req, res, next) {
   }
 
   Loan.findAll(loanQuery)
-      .then(function (loans) {
-        books = loans.map((loan) => loan.Book);
+      .then((loans) => {
+        let books = loans.map((loan) => loan.Book);
         res.render('books', {books: books, pageTitle: 'Checked out books'});
       });
 });
 
 
 
+/**
+ * GET book details
+ * /books/details/:id
+ * 
+ * Retreives the selected book details and grabs
+ * relevant loan and patron details
+ */
+router.get('/details/:id', (req, res, next) => {
+
+  let bookQuery = {
+    where: {
+      id: req.params.id // single book by id
+    }
+  }
+
+  let loanQuery = {
+    include: [Book, Patron],
+    where: {
+      book_id: req.params.id // all loans for book id
+    }
+  }
+
+  Book.findOne(bookQuery)
+      .then((book) => {
+        Loan.findAll(loanQuery)
+            .then((loans) => {
+              res.render('book_details', {book: book, loans: loans});
+            });
+      });
+});
+
+
 
 /////////////// PLACEHOLDERS ///////////////
 
-// GET book details
-router.get('/details/:id', function(req, res, next) {
-  res.render('book_details', {book: {}, loans: [], pageTitle: 'Book details'});
-});
 
 // GET Add new book
 router.get('/new', function(req, res, next) {
   res.render('book_new', {pageTitle: 'New Book'});
 });
-
-
 
 // PUT Save new book
 router.put('/new', function(req, res, next) {

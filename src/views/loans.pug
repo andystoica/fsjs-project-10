@@ -33,5 +33,6 @@ block content
           td= loan.return_by
           td= loan.returned_on
           td
-            a.button(href= '/loans/details/' + loan.id)= 'Return book'
+            unless loan.returned_on
+              a.button(href= '/loans/return/' + loan.id)= 'Return book'
         
