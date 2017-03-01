@@ -111,7 +111,6 @@ router.get('/details/:id', (req, res, next) => {
 
 /////////////// PLACEHOLDERS ///////////////
 
-
 // GET Add new book
 router.get('/new', function(req, res, next) {
   res.render('book_new', {pageTitle: 'New Book'});

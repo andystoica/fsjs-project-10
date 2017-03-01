@@ -1,6 +1,6 @@
 'use strict';
 var express = require('express');
-var router = express.Router();
+var router  = express.Router();
 
 // Database Models
 var Book    = require('../models').Book;
@@ -55,9 +55,6 @@ router.get('/details/:id', (req, res, next) => {
               });
         });
 });
-
-
-
 
 
 

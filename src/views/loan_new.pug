@@ -13,7 +13,7 @@ block content
       label(for= 'patron_id')= 'Patron'
       select
         each patron in patrons
-            option(value= patron.id)= patron.title
+            option(value= patron.id)= patron.name
     p
       label(for= 'loaned_on')= 'Loaned On'
       input(id= 'loaned_on' type= 'text' value= '')

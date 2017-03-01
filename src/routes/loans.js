@@ -1,8 +1,11 @@
+'use strict';
 var express = require('express');
-var router = express.Router();
-var Book = require('../models').Book;
-var Patron = require('../models').Patron;
-var Loan = require('../models').Loan;
+var router  = express.Router();
+
+// Database Models
+var Book    = require('../models').Book;
+var Patron  = require('../models').Patron;
+var Loan    = require('../models').Loan;
 
 
 
@@ -75,6 +78,7 @@ router.get('/checked', (req, res, next) => {
 });
 
 
+
 /**
  * GET loan details
  * /loans/return/:id
@@ -97,13 +101,28 @@ router.get('/return/:id', (req, res, next) => {
 });
 
 
-/////////////// PLACEHOLDERS ///////////////
 
-
-// GET Add new loan
+/**
+ * GET Add new loan
+ * /loans/new
+ * 
+ * Retreives the list of all books and patrons
+ * and populates the new loan form
+ */
 router.get('/new', (req, res, next) => {
-  res.render('loan_new', {books: [], patrons: [], pageTitle: 'New Loan'});
+
+  Book.findAll()
+      .then((books) => {
+        Patron.findAll()
+              .then((patrons) => {
+                res.render('loan_new', {books: books, patrons: patrons, pageTitle: 'New Loan'});
+              });
+      });  
 });
+
+
+
+/////////////// PLACEHOLDERS ///////////////
 
 // PUT Save new loan
 router.put('/new', (req, res, next) => {
