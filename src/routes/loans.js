@@ -1,6 +1,7 @@
 'use strict';
 var express = require('express');
 var router  = express.Router();
+var moment  = require('moment');
 
 // Database Models
 var Book    = require('../models').Book;
@@ -63,7 +64,7 @@ router.get('/overdue', function(req, res, next) {
  * and associated book and patron details
  */
 router.get('/checked', (req, res, next) => {
-  
+
   let loanQuery = {
     include: [Book, Patron],
     where: {
@@ -106,29 +107,66 @@ router.get('/return/:id', (req, res, next) => {
  * GET Add new loan
  * /loans/new
  * 
- * Retreives the list of all books and patrons
- * and populates the new loan form
+ * Loads the add new loan form with 'loaned on' and
+ * 'return by' dates preselected
  */
 router.get('/new', (req, res, next) => {
 
-  Book.findAll()
-      .then((books) => {
-        Patron.findAll()
-              .then((patrons) => {
-                res.render('loan_new', {books: books, patrons: patrons, pageTitle: 'New Loan'});
+  let loan = Loan.build({
+    loaned_on: moment().format('YYYY-MM-DD'),
+    return_by: moment().add(7, 'days').format('YYYY-MM-DD')
+  });
+
+  renderNewLoan(res, loan);
+
+});
+
+
+
+/**
+ * POST Save new loan
+ * /loans/new
+ * 
+ * Saves the new loan to database while handling
+ * any validation errors
+ */
+router.post('/new', (req, res, next) => {
+
+  Loan.create(req.body) // create a new loan and redirect
+      .then((loan) => { // to loans index page
+        res.redirect('/loans');
+      })
+      .catch((err) => { // or show error messages
+        if (err.name === 'SequelizeValidationError') {
+          let loan = Loan.build(req.body);
+          renderNewLoan(res, loan, err);
+        }
+        else res.send(500);
+      });
+});
+
+
+
+/**
+ * Helper for rendering the new loan form
+ */
+function renderNewLoan(res, loan, err) {
+    
+  Book.findAll() // get all the books
+      .then((books) => { 
+        Patron.findAll() // get all the patrons
+              .then((patrons) => { 
+                res.render('loan_new', {
+                    loan: loan,
+                    books: books,
+                    patrons: patrons,
+                    errors: err ? err.errors : [],
+                    pageTitle: 'New Loan'
+                  }
+                );
               });
-      });  
-});
-
-
-
-/////////////// PLACEHOLDERS ///////////////
-
-// PUT Save new loan
-router.post('/save', (req, res, next) => {
-  res.send('Save new loan.');
-});
-
+      });
+}
 
 
 module.exports = router;

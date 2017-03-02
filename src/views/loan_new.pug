@@ -3,22 +3,28 @@ extends layout
 block content
   h1= pageTitle
 
-  form(method='POST' action= '/loans/save')
+  if errors
+    ul
+      each error in errors
+        li
+          em= error.message
+
+  form(method='POST' action= '/loans/new')
     p
       label(for= 'book_id')= 'Book'
-      select
+      select(id= 'book_id' name= 'book_id')
         each book in books
-            option(value= book.id)= book.title
+          option(value= book.id selected= (book.id == loan.book_id))= book.title
     p
       label(for= 'patron_id')= 'Patron'
-      select
+      select(id= 'patron_id' name= 'patron_id')
         each patron in patrons
-            option(value= patron.id)= patron.name
+            option(value= patron.id selected= (patron.id == loan.patron_id))= patron.name
     p
       label(for= 'loaned_on')= 'Loaned On'
-      input(id= 'loaned_on' type= 'text' value= '')
+      input(id= 'loaned_on' name= 'loaned_on' type= 'text' value= loan.loaned_on)
     p
       label(for= 'return_by')= 'Return By'
-      input(id= 'return_by' type= 'text' value= '')
+      input(id= 'return_by' name= 'return_by' type= 'text' value= loan.return_by)
     p
       input(type= 'submit' value= 'Create New Loan')

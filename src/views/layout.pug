@@ -5,15 +5,6 @@ html
     link(rel='stylesheet', href='/stylesheets/style.css')
   
   body
-    nav
-      ul
-        li
-          a(href='/')= 'Home'
-        li
-          a(href='/books')= 'Books'
-        li
-          a(href='/patrons')= 'Patrons'
-        li
-          a(href='/loans')= 'Loans'
+    include partials/top-nav
           
     block content
