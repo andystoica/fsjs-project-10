@@ -1,16 +1,16 @@
 'use strict';
 
 /**
- * /loans            - GET  |
- * /loans/overdue    - GET  |
- * /loans/checked    - GET  |
- * /loans/new        - GET  |
- * /loans/new        - POST |
- * /loans/return/:id - GET  |
- * /loans/return/:id - POST | 
+ * /loans            - GET  | list all loans
+ * /loans/overdue    - GET  | list all overdue loans
+ * /loans/checked    - GET  | list all checked out loans
+ * /loans/new        - GET  | empty form for creating a new loan
+ * /loans/new        - POST | saves new loan and handles validation errors
+ * /loans/return/:id - GET  | return a loan form
+ * /loans/return/:id - POST | updates the loan record and ahndles validation errors
  * 
- * renderNewLoan(res, loan, err)
- * renderReturnLoan(req, res, err)
+ * renderNewLoan(res, loan, err) - Helper for rendering the new loan form
+ * renderReturnLoan(req, res, err) - Helper for rendering the return loan form
  */
 
 var express = require('express');
@@ -152,7 +152,7 @@ router.get('/return/:id', (req, res, next) => {
 
 
 /**
- * POST loan details
+ * POST update loan details
  * /loans/return/:id
  * 
  * Updates the record with the provide date and

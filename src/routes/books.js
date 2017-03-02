@@ -1,4 +1,18 @@
 'use strict';
+
+/**
+ * /books             - GET  | lists all books
+ * /books/overdue     - GET  | lists all overdue books
+ * /books/checked     - GET  | lists all cheked out books
+ * /books/details/:id - GET  | details of an individual book
+ * /books/details/:id - POST | updates details of an individual book
+ * /books/new         - GET  | empty form for adding a new book
+ * /books/new         - POST | creates a new book and handles validation errors
+ * 
+ * renderUpdateBookDetails(res, book, err) - Helper for rendering the update book form
+ * renderNewBook(res, book, err) - Helper for rendering the new book form
+ */
+
 var express = require('express');
 var router  = express.Router();
 
@@ -91,6 +105,8 @@ router.get('/details/:id', (req, res, next) => {
       });
 });
 
+
+
 /**
  * POST save book details
  * /books/details/:id
@@ -115,30 +131,6 @@ router.post('/details/:id', (req, res, next) => {
         else res.send(500);
       });
 });
-
-/**
- * Helper for rendering the Book Details page
- * by fetching loan history for that particular book
- */
-function renderUpdateBookDetails(res, book, err) {
-
-  let loanQuery = {
-    include: [Book, Patron],
-    where: {
-      book_id: book.id // all loans for book id
-    }
-  }
-
-  Loan.findAll(loanQuery)
-      .then((loans) => {
-        res.render('book_details', {
-            book: book,
-            loans: loans,
-            errors: err ? err.errors : [],
-          }
-        );
-      });
-}
 
 
 
@@ -170,6 +162,34 @@ router.post('/new', function(req, res, next) {
         else res.send(500);
       });
 });
+
+
+
+/**
+ * Helper for rendering the Book Details page
+ * by fetching loan history for that particular book
+ */
+function renderUpdateBookDetails(res, book, err) {
+
+  let loanQuery = {
+    include: [Book, Patron],
+    where: {
+      book_id: book.id // all loans for book id
+    }
+  }
+
+  Loan.findAll(loanQuery)
+      .then((loans) => {
+        res.render('book_details', {
+            book: book,
+            loans: loans,
+            errors: err ? err.errors : [],
+          }
+        );
+      });
+}
+
+
 
 /**
  * Helper for rendering the New Book page
