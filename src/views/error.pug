@@ -1,13 +1,8 @@
 extends layout
 
 block content
-  h1= error.status
-  h2= message
+  h1= 'Oops ... something went wrong'
+  p
+    strong
+      em= 'Try one of these instead?'
   include partials/side-nav
-  
-  br
-  br
-  
-  small
-    small
-      pre #{error.stack}
