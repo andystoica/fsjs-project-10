@@ -11,6 +11,14 @@ a {
   a:hover {
     color: black;
   }
+a.page {
+  padding: 0 5px;
+}
+a.active {
+  background-color: #019875;
+  font-weight: normal;
+  color: white;
+}
 a.button, input[type=submit] {
   color: white;
   background: #019875;

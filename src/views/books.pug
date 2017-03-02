@@ -12,6 +12,7 @@ block content
     |  | 
     a(href= '/books/checked')= 'Checked Out'
 
+
   table
     thead
       tr
@@ -28,3 +29,13 @@ block content
           td= book.author
           td= book.genre
           td= book.first_published
+
+  if pageNum <= pageTotal
+    - var n = 1;
+    p= 'Page '
+      while n < pageTotal + 1
+        - var pageLink = 'page=' + n
+        if n == pageNum
+          a(href= '#' class= 'active page')= n++
+        else
+          a(href= '/books?' + pageLink class= 'page')= n++

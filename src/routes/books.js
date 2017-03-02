@@ -20,6 +20,7 @@ var router  = express.Router();
 var Book    = require('../models').Book;
 var Patron  = require('../models').Patron;
 var Loan    = require('../models').Loan;
+var perPage = 5;
 
 
 
@@ -31,9 +32,30 @@ var Loan    = require('../models').Loan;
  */
 router.get('/', (req, res, next) => {
 
-  Book.findAll()
-      .then((books) => {
-        res.render('books', {books: books, pageTitle: 'Books'});
+  let pageNum = req.query.page ? req.query.page : 1;
+  let offset  = (pageNum - 1) * perPage;
+  let search  = req.query.search ? req.query.search : '';
+
+  let bookQuery = {
+    limit:  perPage,
+    offset: offset,
+    where: {
+      $or: [
+        { title:  { $like: '%' + search + '%' } },
+        { author: { $like: '%' + search + '%' } },        
+      ]
+    }
+  };
+
+  Book.findAndCountAll(bookQuery)
+      .then((results) => {
+        res.render('books', {
+            books:     results.rows,
+            pageTitle: 'Books',
+            search:    search,
+            pageNum:   pageNum,
+            pageTotal: Math.ceil(results.count / perPage)
+          });
       });
 });
 
