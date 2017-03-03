@@ -13,12 +13,12 @@
 
 var express = require('express');
 var router  = express.Router();
+var utils   = require('./utilities');
 
 // Database Models
 var Book    = require('../models').Book;
 var Patron  = require('../models').Patron;
 var Loan    = require('../models').Loan;
-var perPage = 3;
 
 
 
@@ -32,10 +32,10 @@ router.get('/', (req, res, next) => {
 
   let search  = req.query.search ? req.query.search : '';
   let pageNum = req.query.page ? req.query.page : 1;
-  let offset  = (pageNum - 1) * perPage;
+  let offset  = (pageNum - 1) * utils.perPage;
 
   let patronQuery = {
-    limit:  perPage,
+    limit:  utils.perPage,
     offset: offset,
     where: {
       $or: [ // add other fields if required
@@ -48,23 +48,11 @@ router.get('/', (req, res, next) => {
   
   Patron.findAndCountAll(patronQuery)
         .then((results) => {
-
-          // build pagination links
-          let pageLinks = [];
-          let numPages = Math.ceil(results.count / perPage);
-
-          for (let i = 1; i <= numPages; i++) {
-            let link = '?' + 'page=' + i.toString()
-                      + (search != '' ? '&search=' + search : '')
-            pageLinks.push({ pageNum: i, href: link, active: pageNum == i });
-          }
-
-          // render the response
           res.render('patrons', {
               baseUrl:    '/patrons',
               patrons:    results.rows,
               pageTitle:  'Patrons',
-              pageLinks:  pageLinks,
+              pageLinks:  utils.pageLinks(pageNum, results.count, search),
               pageSearch: search
             });
         });

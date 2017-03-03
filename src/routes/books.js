@@ -15,12 +15,12 @@
 
 var express = require('express');
 var router  = express.Router();
+var utils   = require('./utilities');
 
 // Databse Models
 var Book    = require('../models').Book;
 var Patron  = require('../models').Patron;
 var Loan    = require('../models').Loan;
-var perPage = 5;
 
 
 
@@ -35,10 +35,10 @@ router.get('/', (req, res, next) => {
 
   let search  = req.query.search ? req.query.search : '';
   let pageNum = req.query.page ? req.query.page : 1;
-  let offset  = (pageNum - 1) * perPage;
+  let offset  = (pageNum - 1) * utils.perPage;
 
   let bookQuery   = {
-    limit:  perPage,
+    limit:  utils.perPage,
     offset: offset,
     where: {
       $or: [ // add other fields if required
@@ -50,23 +50,11 @@ router.get('/', (req, res, next) => {
 
   Book.findAndCountAll(bookQuery)
       .then((results) => {
-
-        // build pagination links
-        let pageLinks = [];
-        let numPages = Math.ceil(results.count / perPage);
-
-        for (let i = 1; i <= numPages; i++) {
-          let link = '?' + 'page=' + i.toString()
-                    + (search != '' ? '&search=' + search : '')
-          pageLinks.push({ pageNum: i, href: link, active: pageNum == i });
-        }
-
-        // render the response
         res.render('books', {
             baseUrl:    '/books',
             books:      results.rows,
             pageTitle:  'Books',
-            pageLinks:  pageLinks,
+            pageLinks:  utils.pageLinks(pageNum, results.count, search),
             pageSearch: search
           });
       });
@@ -85,11 +73,11 @@ router.get('/', (req, res, next) => {
 router.get('/overdue', (req, res, next) => {
 
   let pageNum = req.query.page ? req.query.page : 1;
-  let offset  = (pageNum - 1) * perPage;
+  let offset  = (pageNum - 1) * utils.perPage;
   
   let loanQuery = {
     include: [Book, Patron],
-    limit:  perPage,
+    limit:  utils.perPage,
     offset: offset,
     where: {
       return_by: { $lt: new Date() }, // return by date is in the past
@@ -103,21 +91,12 @@ router.get('/overdue', (req, res, next) => {
         // extract the list of books from the results
         let books = results.rows.map((loan) => loan.Book);
 
-        // build pagination links
-        let pageLinks = [];
-        let numPages = Math.ceil(results.count / perPage);
-
-        for (let i = 1; i <= numPages; i++) {
-          let link = '?' + 'page=' + i.toString();
-          pageLinks.push({ pageNum: i, href: link, active: pageNum == i });
-        }
-
         // render the response
         res.render('books', {
             baseUrl:    '/books/overdue',
             books:      books,
             pageTitle:  'Overdue books',
-            pageLinks:  pageLinks
+            pageLinks:  utils.pageLinks(pageNum, results.count)
           });
       });
 });
@@ -135,11 +114,11 @@ router.get('/overdue', (req, res, next) => {
 router.get('/checked', (req, res, next) => {
 
   let pageNum = req.query.page ? req.query.page : 1;
-  let offset  = (pageNum - 1) * perPage;
+  let offset  = (pageNum - 1) * utils.perPage;
   
   let loanQuery = {
     include: [Book, Patron],
-    limit:  perPage,
+    limit:  utils.perPage,
     offset: offset,
     where: {
       returned_on: null // book not returned yet
@@ -152,21 +131,12 @@ router.get('/checked', (req, res, next) => {
         // extract the list of books from the results
         let books = results.rows.map((loan) => loan.Book);
 
-        // build pagination links
-        let pageLinks = [];
-        let numPages = Math.ceil(results.count / perPage);
-
-        for (let i = 1; i <= numPages; i++) {
-          let link = '?' + 'page=' + i.toString();
-          pageLinks.push({ pageNum: i, href: link, active: pageNum == i });
-        }
-
         // render the response
         res.render('books', {
             baseUrl:    '/books/checked',
             books:      books,
             pageTitle:  'Checked out books',
-            pageLinks:  pageLinks
+            pageLinks:  utils.pageLinks(pageNum, results.count)
           });
       });
 });

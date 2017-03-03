@@ -13,8 +13,10 @@ a {
   }
 a.page {
   padding: 0 5px;
+  margin: 0 3px;
 }
 a.active {
+  border-radius: 2px;
   background-color: #019875;
   font-weight: normal;
   color: white;

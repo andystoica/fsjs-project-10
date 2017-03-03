@@ -16,6 +16,7 @@
 var express = require('express');
 var router  = express.Router();
 var moment  = require('moment');
+var utils   = require('./utilities');
 
 // Database Models
 var Book    = require('../models').Book;
@@ -32,14 +33,24 @@ var Loan    = require('../models').Loan;
  * and associated book and patron details
  */
 router.get('/', function(req, res, next) {
+
+  let pageNum = req.query.page ? req.query.page : 1;
+  let offset  = (pageNum - 1) * utils.perPage;
   
   let loanQuery = {
-    include: [Book, Patron]
+    include: [Book, Patron],
+    limit: utils.perPage,
+    offset: offset
   }
 
-  Loan.findAll(loanQuery)
-      .then(function (loans) {
-        res.render('loans', {loans: loans, pageTitle: 'Loans'});
+  Loan.findAndCountAll(loanQuery)
+      .then(function (results) {
+        res.render('loans', {
+            baseUrl:    '/loans',
+            loans:      results.rows,
+            pageTitle:  'Loans',
+            pageLinks:  utils.pageLinks(pageNum, results.count)
+          });
       });
 });
 
@@ -54,17 +65,27 @@ router.get('/', function(req, res, next) {
  */
 router.get('/overdue', function(req, res, next) {
 
+  let pageNum = req.query.page ? req.query.page : 1;
+  let offset  = (pageNum - 1) * utils.perPage;
+
   let loanQuery = {
     include: [Book, Patron],
+    limit: utils.perPage,
+    offset: offset,
     where: {
       return_by: { $lt: new Date() },
       returned_on: null
     }
   }
 
-  Loan.findAll(loanQuery)
-      .then(function (loans) {
-        res.render('loans', {loans: loans, pageTitle: 'Overdue loans'});
+  Loan.findAndCountAll(loanQuery)
+      .then(function (results) {
+        res.render('loans', {
+            baseUrl:    '/loans/overdue',
+            loans:      results.rows,
+            pageTitle:  'Overdue loans',
+            pageLinks:  utils.pageLinks(pageNum, results.count)
+          });
       });
 });
 
@@ -79,16 +100,26 @@ router.get('/overdue', function(req, res, next) {
  */
 router.get('/checked', (req, res, next) => {
 
+  let pageNum = req.query.page ? req.query.page : 1;
+  let offset  = (pageNum - 1) * utils.perPage;
+
   let loanQuery = {
     include: [Book, Patron],
+    limit: utils.perPage,
+    offset: offset,
     where: {
       returned_on: null 
     }
   }
 
-  Loan.findAll(loanQuery)
-      .then((loans) => {
-        res.render('loans', {loans: loans, pageTitle: 'Checked out loans'});
+  Loan.findAndCountAll(loanQuery)
+      .then(function (results) {
+        res.render('loans', {
+            baseUrl:    '/loans/checked',
+            loans:      results.rows,
+            pageTitle:  'Checked out  loans',
+            pageLinks:  utils.pageLinks(pageNum, results.count)
+          });
       });
 });
 
@@ -225,7 +256,6 @@ function renderReturnLoan(req, res, err) {
         );
       });
 }
-
 
 
 module.exports = router;

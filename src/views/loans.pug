@@ -23,17 +23,21 @@ block content
         th= 'Action'
 
     tbody
-      each loan in loans
+      if loans.length > 0
+        each loan in loans
+          tr
+            td
+              a(href= '/books/details/' + loan.Book.id)= loan.Book.title
+            td
+              a(href= '/patrons/details/' + loan.Patron.id)= loan.Patron.name
+            td= loan.loaned_on
+            td= loan.return_by
+            td= loan.returned_on
+            td
+              unless loan.returned_on
+                a.button(href= '/loans/return/' + loan.id)= 'Return book'
+      else
         tr
-          td
-            a(href= '/books/details/' + loan.Book.id)= loan.Book.title
-          td
-            a(href= '/patrons/details/' + loan.Patron.id)= loan.Patron.name
-          td= loan.loaned_on
-          td= loan.return_by
-          td= loan.returned_on
-          td
-            unless loan.returned_on
-              a.button(href= '/loans/return/' + loan.id)= 'Return book'
+          td No records found.
 
   include partials/pagination

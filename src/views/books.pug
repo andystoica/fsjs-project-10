@@ -16,7 +16,6 @@ block content
     |  | 
     a(href= '/books/checked') Checked Out
 
-
   table
     thead
       tr
@@ -26,13 +25,17 @@ block content
         th Year Released
 
     tbody
-      each book in books
+      if books.length > 0
+        each book in books
+          tr
+            td
+              a(href= '/books/details/' + book.id)= book.title
+            td= book.author
+            td= book.genre
+            td= book.first_published
+      else
         tr
-          td
-            a(href= '/books/details/' + book.id)= book.title
-          td= book.author
-          td= book.genre
-          td= book.first_published
+          td No records found.
 
 
   include partials/pagination
