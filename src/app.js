@@ -3,14 +3,12 @@ var express    = require('express');
 var path       = require('path');
 var favicon    = require('serve-favicon');
 var bodyParser = require('body-parser');
-var logger     = require('morgan');
 
 // Route handlers
 var index      = require('./routes/index');
 var books      = require('./routes/books');
 var patrons    = require('./routes/patrons');
 var loans      = require('./routes/loans');
-
 var app        = express();
 
 
@@ -24,7 +22,6 @@ app.use(favicon(path.join(__dirname, 'public', 'images/favicon.ico')));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'public')));
-app.use(logger('dev'));
 
 
 /**
