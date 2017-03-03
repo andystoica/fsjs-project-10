@@ -35,4 +35,5 @@ block content
           td
             unless loan.returned_on
               a.button(href= '/loans/return/' + loan.id)= 'Return book'
-        
+
+  include partials/pagination

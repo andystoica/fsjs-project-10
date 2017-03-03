@@ -3,23 +3,27 @@ extends layout
 block content
   h1= pageTitle
   p
-    a.button(href= '/books/new')= 'Create New Book'
+    form(method= 'GET' action= '/books')
+      p.search
+        input(id= 'search' name= 'search' type= 'text' value= pageSearch placeholder= 'Search by title or author')
 
-  p= 'Filters '
-    a(href= '/books')= 'All'
+        a.button(href= '/books/new') Create New Book
+
+  p Filters 
+    a(href= '/books') All
     |  | 
-    a(href= '/books/overdue')= 'Overdue'
+    a(href= '/books/overdue') Overdue
     |  | 
-    a(href= '/books/checked')= 'Checked Out'
+    a(href= '/books/checked') Checked Out
 
 
   table
     thead
       tr
-        th= 'Title'
-        th= 'Author'
-        th= 'Genre'
-        th= 'Year Released'
+        th Title
+        th Author
+        th Genre
+        th Year Released
 
     tbody
       each book in books
@@ -30,12 +34,5 @@ block content
           td= book.genre
           td= book.first_published
 
-  if pageNum <= pageTotal
-    - var n = 1;
-    p= 'Page '
-      while n < pageTotal + 1
-        - var pageLink = 'page=' + n
-        if n == pageNum
-          a(href= '#' class= 'active page')= n++
-        else
-          a(href= '/books?' + pageLink class= 'page')= n++
+
+  include partials/pagination

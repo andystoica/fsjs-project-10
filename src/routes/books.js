@@ -28,33 +28,46 @@ var perPage = 5;
  * GET all books
  * /books
  * 
- * Reads all books details in the books table
+ * Reads all books details in the books table and display
+ * them using pagination controls and search functionality
  */
 router.get('/', (req, res, next) => {
 
+  let search  = req.query.search ? req.query.search : '';
   let pageNum = req.query.page ? req.query.page : 1;
   let offset  = (pageNum - 1) * perPage;
-  let search  = req.query.search ? req.query.search : '';
 
-  let bookQuery = {
+  let bookQuery   = {
     limit:  perPage,
     offset: offset,
     where: {
-      $or: [
+      $or: [ // add other fields if required
         { title:  { $like: '%' + search + '%' } },
-        { author: { $like: '%' + search + '%' } },        
+        { author: { $like: '%' + search + '%' } } 
       ]
     }
   };
 
   Book.findAndCountAll(bookQuery)
       .then((results) => {
+
+        // build pagination links
+        let pageLinks = [];
+        let numPages = Math.ceil(results.count / perPage);
+
+        for (let i = 1; i <= numPages; i++) {
+          let link = '?' + 'page=' + i.toString()
+                    + (search != '' ? '&search=' + search : '')
+          pageLinks.push({ pageNum: i, href: link, active: pageNum == i });
+        }
+
+        // render the response
         res.render('books', {
-            books:     results.rows,
-            pageTitle: 'Books',
-            search:    search,
-            pageNum:   pageNum,
-            pageTotal: Math.ceil(results.count / perPage)
+            baseUrl:    '/books',
+            books:      results.rows,
+            pageTitle:  'Books',
+            pageLinks:  pageLinks,
+            pageSearch: search
           });
       });
 });
@@ -67,21 +80,45 @@ router.get('/', (req, res, next) => {
  * 
  * Reads all overbook loans from the loans table
  * then updates the table with the corresponding book details
+ * and display them using pagination controls
  */
 router.get('/overdue', (req, res, next) => {
+
+  let pageNum = req.query.page ? req.query.page : 1;
+  let offset  = (pageNum - 1) * perPage;
   
   let loanQuery = {
     include: [Book, Patron],
+    limit:  perPage,
+    offset: offset,
     where: {
       return_by: { $lt: new Date() }, // return by date is in the past
       returned_on: null // book not returned yet
     }
   }
 
-  Loan.findAll(loanQuery)
-      .then((loans) => {
-        let books = loans.map((loan) => loan.Book);
-        res.render('books', {books: books, pageTitle: 'Overdue books'});
+  Loan.findAndCountAll(loanQuery)
+      .then((results) => {
+
+        // extract the list of books from the results
+        let books = results.rows.map((loan) => loan.Book);
+
+        // build pagination links
+        let pageLinks = [];
+        let numPages = Math.ceil(results.count / perPage);
+
+        for (let i = 1; i <= numPages; i++) {
+          let link = '?' + 'page=' + i.toString();
+          pageLinks.push({ pageNum: i, href: link, active: pageNum == i });
+        }
+
+        // render the response
+        res.render('books', {
+            baseUrl:    '/books/overdue',
+            books:      books,
+            pageTitle:  'Overdue books',
+            pageLinks:  pageLinks
+          });
       });
 });
 
@@ -93,20 +130,44 @@ router.get('/overdue', (req, res, next) => {
  * 
  * Reads all checkout loans from the loans table
  * then updates the table with the corresponding book details
+ * and display them using pagination controls
  */
 router.get('/checked', (req, res, next) => {
 
+  let pageNum = req.query.page ? req.query.page : 1;
+  let offset  = (pageNum - 1) * perPage;
+  
   let loanQuery = {
     include: [Book, Patron],
+    limit:  perPage,
+    offset: offset,
     where: {
       returned_on: null // book not returned yet
     }
   }
 
-  Loan.findAll(loanQuery)
-      .then((loans) => {
-        let books = loans.map((loan) => loan.Book);
-        res.render('books', {books: books, pageTitle: 'Checked out books'});
+  Loan.findAndCountAll(loanQuery)
+      .then((results) => {
+
+        // extract the list of books from the results
+        let books = results.rows.map((loan) => loan.Book);
+
+        // build pagination links
+        let pageLinks = [];
+        let numPages = Math.ceil(results.count / perPage);
+
+        for (let i = 1; i <= numPages; i++) {
+          let link = '?' + 'page=' + i.toString();
+          pageLinks.push({ pageNum: i, href: link, active: pageNum == i });
+        }
+
+        // render the response
+        res.render('books', {
+            baseUrl:    '/books/checked',
+            books:      books,
+            pageTitle:  'Checked out books',
+            pageLinks:  pageLinks
+          });
       });
 });
 

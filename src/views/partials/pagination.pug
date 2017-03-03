@@ -1,0 +1,7 @@
+if pageLinks && pageLinks.length > 0
+    p Page 
+        each link in pageLinks
+            if link.active
+                a(href= '' class= 'page active')= link.pageNum
+            else
+                a(href= link.href class= 'page')= link.pageNum

@@ -18,6 +18,7 @@ var router  = express.Router();
 var Book    = require('../models').Book;
 var Patron  = require('../models').Patron;
 var Loan    = require('../models').Loan;
+var perPage = 3;
 
 
 
@@ -28,10 +29,44 @@ var Loan    = require('../models').Loan;
  * Reads all patrons details from the patrons table
  */
 router.get('/', (req, res, next) => {
+
+  let search  = req.query.search ? req.query.search : '';
+  let pageNum = req.query.page ? req.query.page : 1;
+  let offset  = (pageNum - 1) * perPage;
+
+  let patronQuery = {
+    limit:  perPage,
+    offset: offset,
+    where: {
+      $or: [ // add other fields if required
+        { first_name: { $like: '%' + search + '%' } },
+        { last_name:  { $like: '%' + search + '%' } },
+        { library_id: { $like: '%' + search + '%' } } 
+      ]
+    }
+  };
   
-  Patron.findAll()
-        .then((patrons) => {
-          res.render('patrons', {patrons: patrons, pageTitle: 'Patrons'});
+  Patron.findAndCountAll(patronQuery)
+        .then((results) => {
+
+          // build pagination links
+          let pageLinks = [];
+          let numPages = Math.ceil(results.count / perPage);
+
+          for (let i = 1; i <= numPages; i++) {
+            let link = '?' + 'page=' + i.toString()
+                      + (search != '' ? '&search=' + search : '')
+            pageLinks.push({ pageNum: i, href: link, active: pageNum == i });
+          }
+
+          // render the response
+          res.render('patrons', {
+              baseUrl:    '/patrons',
+              patrons:    results.rows,
+              pageTitle:  'Patrons',
+              pageLinks:  pageLinks,
+              pageSearch: search
+            });
         });
 });
 
