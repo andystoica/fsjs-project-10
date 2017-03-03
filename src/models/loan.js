@@ -5,15 +5,60 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.INTEGER,
       primaryKey: true
     },
-    book_id: DataTypes.INTEGER,
-    patron_id: DataTypes.INTEGER,
-    loaned_on: DataTypes.DATE,
-    return_by: DataTypes.DATE,
-    returned_on: DataTypes.DATE
+    book_id: {
+      type: DataTypes.INTEGER,
+      validate: {
+        notEmpty: {
+          msg: 'Book ID is required.'
+        }
+      }
+    },
+    patron_id: {
+      type: DataTypes.INTEGER,
+      validate: {
+        notEmpty: {
+          msg: 'Patron ID is required.'
+        }
+      }
+    },
+    loaned_on: {
+      type: DataTypes.DATEONLY,
+      validate: {
+        notEmpty: {
+          msg: 'Loaned on Date is required.'
+        },
+        isDate: {
+          msg: 'Loaned on Date must be a valid date.'
+        }
+      }
+    },
+    return_by: {
+      type: DataTypes.DATEONLY,
+      validate: {
+        notEmpty: {
+          msg: 'Return by Date is required.'
+        },
+        isDate: {
+          msg: 'Return by Date must be a valid date.'
+        }
+      }
+    },
+    returned_on: {
+      type: DataTypes.DATEONLY,
+      validate: {
+        notEmpty: {
+          msg: 'Return by Date is required.'
+        },
+        isDate: {
+          msg: 'Return by Date must be a valid date.'
+        }
+      }
+    }
   }, {
     classMethods: {
       associate: function(models) {
-        // associations can be defined here
+        this.belongsTo(models.Book, { foreignKey: 'book_id' });
+        this.belongsTo(models.Patron, { foreignKey: 'patron_id' });
       }
     },
     timestamps: false

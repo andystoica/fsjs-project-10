@@ -29,7 +29,7 @@ var server = http.createServer(app);
 
 models.sequelize.sync().then(function (){
   server.listen(port, function (){
-    console.log('Express listening on port ' + server.address().port);
+    console.log('Books for grabs at http://localhost:' + server.address().port);
   });
   server.on('error', onError);
   server.on('listening', onListening);

@@ -1,0 +1,41 @@
+extends layout
+
+block content
+  h1= pageTitle
+  p
+    form(method= 'GET' action= '/books')
+      p.search
+        input(id= 'search' name= 'search' type= 'text' value= pageSearch placeholder= 'Search by title or author')
+
+        a.button(href= '/books/new') Create New Book
+
+  p Filters 
+    a(href= '/books') All
+    |  | 
+    a(href= '/books/overdue') Overdue
+    |  | 
+    a(href= '/books/checked') Checked Out
+
+  table
+    thead
+      tr
+        th Title
+        th Author
+        th Genre
+        th Year Released
+
+    tbody
+      if books.length > 0
+        each book in books
+          tr
+            td
+              a(href= '/books/details/' + book.id)= book.title
+            td= book.author
+            td= book.genre
+            td= book.first_published
+      else
+        tr
+          td No records found.
+
+
+  include partials/pagination

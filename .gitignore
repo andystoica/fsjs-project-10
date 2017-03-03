@@ -1,5 +1,5 @@
 node_modules
-mock
+examples
 *.log
 
 .DS_Store
