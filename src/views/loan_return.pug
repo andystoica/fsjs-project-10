@@ -10,19 +10,19 @@ block content
           em= error.message
 
   p
-    strong Book Title: 
+    strong Book title: 
     |
     = loan.Book.title
   p
-    strong Loaned By: 
+    strong Loaned by: 
     |
     = loan.Patron.name
   p
-    strong Loaned On: 
+    strong Loaned on: 
     |
     = loan.loaned_on
   p
-    strong Return By: 
+    strong Return by: 
     |
     = loan.return_by
   form(method= 'post' action= '/loans/return/' + loan.id)

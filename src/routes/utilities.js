@@ -3,7 +3,7 @@
 /**
  * Number of items per page
  */ 
-let perPage = 3;
+const perPage = 5;
 
 
 

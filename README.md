@@ -22,5 +22,10 @@ Main tasks and challenges were:
 npm install
 npm start
 
-http://127.0.0.1:3000
+http://localhost:3000
+~~~~
+
+Pagination settings can be adjusted in the /routes/utilities.js file
+~~~~
+const perPage = 3;
 ~~~~
