@@ -11,37 +11,37 @@ block content
 
   form(method= 'post' action= '/patrons/details/' + patron.id)
     p
-      label(for= 'first_name')= 'First Name'
+      label(for= 'first_name') First Name
       input(id= 'first_name' name= 'first_name' type= 'text' value= patron.first_name)
     p
-      label(for= 'last_name')= 'Last Name'
+      label(for= 'last_name') Last Name
       input(id= 'last_name' name= 'last_name' type= 'text' value= patron.last_name)
     p
-      label(for= 'address')= 'Address'
+      label(for= 'address') Address
       input(id= 'address' name= 'address' type= 'text' value= patron.address)
     p
-      label(for= 'email')= 'Email'
+      label(for= 'email') Email
       input(id= 'email' name= 'email' type= 'text' value= patron.email)
     p
-      label(for= 'library_id')= 'Library ID'
+      label(for= 'library_id') Library ID
       input(id= 'library_id' name= 'library_id' type= 'text' value= patron.library_id)
     p
-      label(for= 'zip_code')= 'Zip Code'
+      label(for= 'zip_code') Zip Code
       input(id= 'zip_code' name= 'zip_code' type= 'text' value= patron.zip_code)
     p
       input(type= 'submit' value= 'Update')
       input(type= 'hidden' value= patron.id name= 'id')
 
-  h2= 'Loan History'
+  h2 Loan History
   table
     thead
       tr
-        th= 'Book'
-        th= 'Patron'
-        th= 'Loaned on'
-        th= 'Return by'
-        th= 'Returned on'
-        th= 'Action'
+        th Book
+        th Patron
+        th Loaned on
+        th Return by
+        th Returned on
+        th Action
     tbody
       each loan in loans
         tr
@@ -54,4 +54,4 @@ block content
           td= loan.returned_on
           td
             unless loan.returned_on
-              a(href= '/loans/return/' + loan.id class= 'button')= 'Return Book'
+              a(href= '/loans/return/' + loan.id class= 'button') Return Book

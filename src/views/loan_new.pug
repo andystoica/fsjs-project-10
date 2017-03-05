@@ -11,20 +11,20 @@ block content
 
   form(method='POST' action= '/loans/new')
     p
-      label(for= 'book_id')= 'Book'
+      label(for= 'book_id') Book
       select(id= 'book_id' name= 'book_id')
         each book in books
           option(value= book.id selected= (book.id == loan.book_id))= book.title
     p
-      label(for= 'patron_id')= 'Patron'
+      label(for= 'patron_id') Patron
       select(id= 'patron_id' name= 'patron_id')
         each patron in patrons
             option(value= patron.id selected= (patron.id == loan.patron_id))= patron.name
     p
-      label(for= 'loaned_on')= 'Loaned On'
+      label(for= 'loaned_on') Loaned On
       input(id= 'loaned_on' name= 'loaned_on' type= 'text' value= loan.loaned_on)
     p
-      label(for= 'return_by')= 'Return By'
+      label(for= 'return_by') Return By
       input(id= 'return_by' name= 'return_by' type= 'text' value= loan.return_by)
     p
       input(type= 'submit' value= 'Create New Loan')

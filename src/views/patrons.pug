@@ -5,18 +5,18 @@ block content
   p
     form(method= 'GET' action= baseURL)
       p.search
-        input(id= 'search' name= 'search' type= 'text' value= pageSearch placeholder= 'Search by name or library IDnp')
+        input(id= 'search' name= 'search' type= 'text' value= pageSearch placeholder= 'Search by name or library ID')
 
-        a.button(href='/patrons/new')= 'Create New Patron'
+        a.button(href='/patrons/new') Create New Patron
 
   table
     thead
       tr
-        th= 'Name'
-        th= 'Address'
-        th= 'Email'
-        th= 'Library ID'
-        th= 'Zip'
+        th Name
+        th Address
+        th Email
+        th Library ID
+        th Zip
 
     tbody
       if patrons.length > 0

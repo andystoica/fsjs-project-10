@@ -3,24 +3,24 @@ extends layout
 block content
   h1= pageTitle
   p
-    a.button(href= '/loans/new')= 'Create New Loan'
+    a.button(href= '/loans/new') Create New Loan
 
   p= 'Filters '
-    a(href= '/loans')= 'All'
+    a(href= '/loans') All
     |  | 
-    a(href= '/loans/overdue')= 'Overdue'
+    a(href= '/loans/overdue') Overdue
     |  | 
-    a(href= '/loans/checked')= 'Checked Out'
+    a(href= '/loans/checked') Checked Out
 
   table
     thead
       tr
-        th= 'Book'
-        th= 'Patron'
-        th= 'Loaned on'
-        th= 'Return by'
-        th= 'Returned on'
-        th= 'Action'
+        th Book
+        th Patron
+        th Loaned on
+        th Return by
+        th Returned on
+        th Action
 
     tbody
       if loans.length > 0
@@ -35,7 +35,7 @@ block content
             td= loan.returned_on
             td
               unless loan.returned_on
-                a.button(href= '/loans/return/' + loan.id)= 'Return book'
+                a.button(href= '/loans/return/' + loan.id) Return book
       else
         tr
           td No records found.
