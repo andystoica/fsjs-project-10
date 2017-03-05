@@ -94,7 +94,7 @@ label {
   min-width: 130px;
   display: inline-block;
 }
-input {
+input, select {
   border: 1px solid #aaa;
   padding: 10px 14px 12px;
   font-family: "Lucida Grande", Helvetica, Arial, sans-serif;
@@ -103,6 +103,15 @@ input {
 }
 input[type=text], select {
   margin-left: 10px;
+}
+
+select {
+  -webkit-appearance: none;
+  border: 1px solid #aaa;
+  background: right 10px center no-repeat url(../images/icon-down-arrow.svg) white;
+  background-size: 20px;
+  padding-right: 40px;
+  width: 340px;
 }
 
 p.search a {
